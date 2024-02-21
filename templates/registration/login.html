@@ -1,0 +1,16 @@
+{% extends 'main/home.html' %}
+{% load crispy_forms_filters %}
+{% block title %}Login{% endblock %}
+
+{% block navbar %}
+
+{% endblock %}
+
+{% block content %}
+    <form method="POST">
+        {% csrf_token %}
+        {{ form | crispy }}
+        <p>Don't have an account? Click <a href="/sign-up">Here</a>!</p>
+        <input  type="submit" class="btn btn-success ">
+    </form>
+{% endblock %}

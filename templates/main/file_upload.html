@@ -1,0 +1,19 @@
+{% include 'main/base.html' %}
+
+{% block content %}
+    <div class="container">
+    <br>
+        <div class="header text-center">
+            <h2>Upload Files</h2>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-control">
+                <label>Upload Files <input type="file" name="file[]" multiple></label>
+            </div>
+            <br>
+            <input type="submit" class="btn btn-success">
+        </form>
+    </div>
+{% endblock %}

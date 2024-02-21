@@ -1,0 +1,106 @@
+{% include 'main/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}
+        Home
+    {% endblock %}</title>
+</head>
+<body>
+
+<div class="container">
+    {% block content %}
+
+        {% if messages %}
+            {% for message in messages %}
+            {% if message.tags == 'error' %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+                {% else %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endif %}
+
+        {% endfor %}
+        {% endif %}
+
+        {% if not user.is_authenticated %}
+            <br>
+            <br>
+            <h3 class="text text-center">Start using cloud Storage by Clicking <a href="/login" class="">Here</a></h3>
+        {% endif %}
+
+        <div class="col-md-10">
+            {% if files %}
+                <h3 class="header text-primary text-center">Uploaded Files</h3>
+
+                <div class="center" >
+            <table class="table">
+                <tr>
+                    <th><input type="search" id="search" name="search" placeholder="search" class="form-control"></th>
+
+                </tr>
+            </table>
+        </div>
+                    <table id="mytable" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">S.no</th>
+                                <th class="text-center">File Name</th>
+                                <th class="text-center">View</th>
+                                <th class="text-center">Download</th>
+                                <th class="text-center">Delete</th>
+                            </tr>
+                        </thead>
+                    {% for file in files %}
+                        <tbody >
+                            <tr>
+                                <td  class="text-center">{{ forloop.counter }}</td>
+                                <td  >{{ file.file_name }}</td>
+                                <td  class="text-center"><a href="{{ file.file.url }}" target="_blank" class="btn btn-success" >View</a></td>
+                                <td  class="text-center"><a href="/download-file/{{ file.id }}" class="btn btn-primary">Download</a></td>
+                                <td  class="text-center"><a href="/delete-file/{{ file.id }}" class="btn btn-danger">Delete</a></td>
+                            </tr>
+                        </tbody>
+                    {% endfor %}
+                    </table>
+                <P id="no-files-message">No files found</P>
+            {% elif user.is_authenticated %}
+                <br>
+                <p class="text text-muted text-center">No files are uploaded yet. Start uploading by clicking <a href="/file-upload/">Here</a>!</p>
+            {% endif %}
+        </div>
+    {% endblock %}
+</div>
+
+</body>
+</html>
+
+<script>
+    $(document).ready(function () {
+
+    $("#no-files-message").hide();
+
+    $(".alert").hide(3500);
+
+    // Search functionality
+    $("#search").keyup(function () {
+        var value = $(this).val().toLowerCase();
+        $("#mytable tbody tr").each(function () {
+            var rowText = $(this).text().toLowerCase();
+            $(this).toggle(rowText.includes(value));
+        });
+
+        var visibleRows = $("#mytable tbody tr:visible").length;
+        if (visibleRows === 0) {
+            $("#no-files-message").show();
+        } else {
+            $("#no-files-message").hide();
+        }
+    });
+});
+
+</script>
