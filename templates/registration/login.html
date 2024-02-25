@@ -10,7 +10,15 @@
     <form method="POST">
         {% csrf_token %}
         {{ form | crispy }}
-        <p>Don't have an account? Click <a href="/sign-up">Here</a>!</p>
-        <input  type="submit" class="btn btn-success ">
+
+        <div class="d-flex flex-column ">
+            <div>
+                <p><a href="/password-reset/">Forgot Password?</a></p>
+                <input  type="submit" class="btn btn-success ">
+            </div>
+            <p>Don't have an account? Click <a href="/sign-up">Here</a>!</p>
+
+        </div>
+
     </form>
 {% endblock %}

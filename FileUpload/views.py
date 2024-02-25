@@ -19,24 +19,6 @@ def index(request):
     return render(request, 'main/home.html', context)
 
 
-# def login(request):
-#     if request.method == 'POST':
-#         form = LoginForm(data=request.POST)
-#         username = form.cleaned_data['username']
-#         password = form.cleaned_data['password']
-#
-#         user = authenticate(request, username=username, password=password)
-#         if user is not None:
-#             auth_login(request, user)  # Use auth_login instead of auth.login
-#             return HttpResponse('successful')
-#         else:
-#             return HttpResponse('wrong credentials')
-#     else:
-#         form = LoginForm()
-#     context = {'form': form}
-#     return render(request, 'registration/login.html', context)
-
-
 def sign_up(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
