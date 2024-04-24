@@ -1,20 +1,22 @@
 import os
+import time
+from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.http import HttpResponse, FileResponse
 from django.shortcuts import render, redirect
 from .forms import RegistrationForm
 from .models import MyFileUpload, FileHash
 import hashlib
 
-
 # Create your views here.
 
 def index(request):
-    files_obj = MyFileUpload.objects.filter(user=request.user.id)
+    files_obj = MyFileUpload.objects.filter(user=request.user.id).order_by('file_name')
     context = {'files': files_obj}
     return render(request, 'main/home.html', context)
 
@@ -37,10 +39,11 @@ def sign_up(request):
 def file_upload(request):
     if request.method == 'POST':
         files = request.FILES.getlist('file[]')
-
+        files_name_list=[]
         for file in files:
             # print(file.name)
             md5 = hashlib.md5()
+            files_name_list.append(file.name)
 
             for chunk in file.chunks():
                 md5.update(chunk)
@@ -69,6 +72,17 @@ def file_upload(request):
                                                 file=file)
                     FileHash.objects.create(file_hash=file_hash)
 
+        file_names = f'File names: {files_name_list}'
+        formatted_time = datetime.fromtimestamp(time.time()).strftime('%d-%m-%Y %H-%M-%S')
+        time_of_upload = f'Time of upload: {formatted_time}'
+
+        subject = f'File upload succesful'
+        message = f'{file_names}\n{time_of_upload}'
+        sender = 'sivagnanasankar2003@gmail.com'
+        recipient = [f'{request.user.email}']
+
+        send_mail(subject, message, sender, recipient)
+
         return redirect('index')
 
     return render(request, 'main/file_upload.html')
@@ -77,6 +91,16 @@ def file_upload(request):
 @login_required(login_url='/login')
 def delete_file(request, id):
     obj = MyFileUpload.objects.get(id=id)
+
+    file_name = f'File name: {obj.file_name}'
+    formatted_time = datetime.fromtimestamp(time.time()).strftime('%d-%m-%Y %H-%M-%S')
+    time_of_deletion = f'Time of deletion: {formatted_time}'
+
+    subject = f'File deleted succesfully'
+    message = f'{file_name}\n{time_of_deletion}'
+    sender = 'sivagnanasankar2003@gmail.com'
+    recipient = [f'{request.user.email}']
+
     file_hash_obj = FileHash.objects.get(file_hash=obj.file_hash)
     if file_hash_obj.count == 1:
         os.remove(obj.file.path)
@@ -85,6 +109,9 @@ def delete_file(request, id):
         file_hash_obj.count -= 1
         file_hash_obj.save()
     obj.delete()
+
+    send_mail(subject, message, sender, recipient)
+
     return redirect('index')
 
 
