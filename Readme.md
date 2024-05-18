@@ -1,10 +1,6 @@
 **Cloud Storage Data Deduplication**
 
-It a cloud storage system that optimizes storage space by identifying and eliminating duplicate files using hashing.
-Cloud storage deduplication is essential for optimizing storage space and reducing data redundancy in cloud environments.
-Instead of storing multiple copy of same file, one copy is shared among all the clients who have the same file by reducing the storage space.
-MD5 is used to generate unique identifiers (hash values) for files.
-Hashing enables quick comparison and detection of duplicate files.
+Streamlining storage efficiency, our cloud storage system employs advanced deduplication techniques to identify and eliminate duplicate files, effectively minimizing data redundancy. By harnessing MD5 hashing, each file is assigned a unique identifier, enabling rapid comparison and detection of duplicates. This optimization ensures that only one copy of each file is stored, significantly reducing storage space while seamlessly catering to the needs of multiple clients.
 
 Requirements:
 **Django - 5.0.1
